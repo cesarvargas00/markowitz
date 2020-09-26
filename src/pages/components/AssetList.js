@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
 import { format, subBusinessDays } from 'date-fns'
 import './AssetList.css'
+
+const decimalFormatter = Intl.NumberFormat('pt-BR', {
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+})
+
 export default function AssetList({ assets, onAdd, onRemove }) {
   const [symbol, setSymbol] = useState('')
   const [amount, setAmount] = useState(100)
@@ -75,9 +81,9 @@ export default function AssetList({ assets, onAdd, onRemove }) {
               <td>{asset.symbol}</td>
               <td>{asset.amount}</td>
               <td>{asset.close}</td>
-              <td>{asset.mean * 100}%</td>
-              <td>{asset.stdev * 100}%</td>
-              <td>{asset.variance * 100}%</td>
+              <td>{decimalFormatter.format(asset.mean * 100)}%</td>
+              <td>{decimalFormatter.format(asset.stdev * 100)}%</td>
+              <td>{decimalFormatter.format(asset.variance * 100)}%</td>
               <td>
                 <button
                   onClick={() => {
