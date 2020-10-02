@@ -31,7 +31,7 @@ export default function AssetList({ assets, onAdd, onRemove }) {
             {
               headers: {
                 'access-token':
-                  'LYmfOH73DP9K5ZIHH4Gk3z7rx7HNNaWeAR6yYOtWxzQ/QkQbPcZlFwzXpj5gLAB0+oJOo+uIavGfFPLe5po7PA==--R1n8gel8uQzTxYzwXmx5kA==--TUQO11K2Z33fPwqw0ZBXFA==',
+                  'none-admin',
               },
             }
           )
