@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AssetList from './components/AssetList'
-import CorrelationMatrix from './components/CorrelationMatrix'
+import Matrix from './components/Matrix'
 import Result from './components/Result'
 
 function correlation(x, xMean, y, yMean) {
@@ -23,9 +23,26 @@ function correlation(x, xMean, y, yMean) {
   return numerator / (xDSquaredSum * yDSquaredSum) ** 0.5
 }
 
+function covariancesFromCorrelations(correlations, stdevs) {
+  return Object.keys(correlations).reduce(
+    (acc, row) => ({
+      ...acc,
+      [row]: Object.keys(correlations[row]).reduce(
+        (acc, col) => ({
+          ...acc,
+          [col]: correlations[row][col] * stdevs[row] * stdevs[col],
+        }),
+        {}
+      ),
+    }),
+    {}
+  )
+}
+
 export default function Home() {
   const [assets, setAssets] = useState([])
   const [correlations, setCorrelations] = useState({})
+  const [covariances, setCovariances] = useState({})
 
   useEffect(() => {
     const newCorrelations = {}
@@ -43,12 +60,17 @@ export default function Home() {
       }
     }
     setCorrelations(newCorrelations)
-    console.log(newCorrelations)
-  }, [assets.length])
+    const stdevs = assets.reduce(
+      (acc, asset) => ({ ...acc, [asset.symbol]: asset.stdev }),
+      {}
+    )
+    setCovariances(covariancesFromCorrelations(newCorrelations, stdevs))
+  }, [assets.length, assets])
 
   return (
     <div>
       <h1>Markowitz calculator</h1>
+      <h2>Asset List</h2>
       <AssetList
         onAdd={asset => {
           let found = false
@@ -67,9 +89,11 @@ export default function Home() {
         }
         assets={assets}
       />
-      <CorrelationMatrix assets={assets} />
-
-      <Result assets={assets} />
+      <h2>Correlations</h2>
+      <Matrix data={correlations} />
+      <h2>Covariations</h2>
+      <Matrix data={covariances} />
+      <Result assets={assets} covariances={covariances} />
     </div>
   )
 }

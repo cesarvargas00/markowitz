@@ -71,8 +71,8 @@ export default function AssetList({ assets, onAdd, onRemove }) {
             <th>Amount</th>
             <th>Close</th>
             <th>Mean</th>
-            <th>STDEV</th>
-            <th>VARIANCE</th>
+            <th>σ</th>
+            <th>σ²</th>
           </tr>
         </thead>
         <tbody>
