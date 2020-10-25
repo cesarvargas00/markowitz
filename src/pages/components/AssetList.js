@@ -30,8 +30,7 @@ export default function AssetList({ assets, onAdd, onRemove }) {
             )}&to=${format(today, 'yyyyMMdd0000')}&fill=business_days`,
             {
               headers: {
-                'access-token':
-                  'none-admin',
+                'access-token': 'none-admin',
               },
             }
           )

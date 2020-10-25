@@ -70,6 +70,10 @@ export default function Home() {
   return (
     <div>
       <h1>Markowitz calculator</h1>
+      <h4>
+        {' '}
+        Powered by <a href="https://oplab.com.br">OpLab</a>
+      </h4>
       <h2>Asset List</h2>
       <AssetList
         onAdd={asset => {
