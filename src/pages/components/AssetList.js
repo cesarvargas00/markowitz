@@ -30,7 +30,8 @@ export default function AssetList({ assets, onAdd, onRemove }) {
             )}&to=${format(today, 'yyyyMMdd0000')}&fill=business_days`,
             {
               headers: {
-                'access-token': 'none-admin',
+                'access-token':
+                  'GNM/d6VQN92VIdXAWrum7YiXk4MtAHMji9UhCyBs7jO1DBSYL1Q/1VaQsfhYOqJw2Q3gVdiaep20Ec9tHnfbhQ==--yFb4BBYcWtYgrHnDHkGaJA==--7xaMOyZJb43SSW9kDWzNKw==',
               },
             }
           )
@@ -38,9 +39,7 @@ export default function AssetList({ assets, onAdd, onRemove }) {
             .then(({ data }) => {
               const returns = []
               for (let i = 1; i < data.length; i++) {
-                returns.push(
-                  (data[i].close - data[i - 1].close) / data[i - 1].close
-                )
+                returns.push(Math.log(data[i].close / data[i - 1].close))
               }
               const n = returns.length
               const mean = returns.reduce((acc, r) => r + acc, 0) / n

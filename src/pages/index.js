@@ -3,12 +3,10 @@ import AssetList from './components/AssetList'
 import Matrix from './components/Matrix'
 import Result from './components/Result'
 
-function correlation(x, xMean, y, yMean) {
+function correlation(x, y) {
+  const xMean = x.reduce((acc, el) => el + acc, 0) / x.length
+  const yMean = y.reduce((acc, el) => el + acc, 0) / y.length
   if (x.length !== y.length) return null
-
-  xMean = xMean / x.length
-  yMean = yMean / y.length
-
   let numerator = 0,
     xDSquaredSum = 0,
     yDSquaredSum = 0
@@ -53,9 +51,7 @@ export default function Home() {
         }
         newCorrelations[assets[i].symbol][assets[j].symbol] = correlation(
           assets[i].returns,
-          assets[i].mean,
-          assets[j].returns,
-          assets[j].mean
+          assets[j].returns
         )
       }
     }
