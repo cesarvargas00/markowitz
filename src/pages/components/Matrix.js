@@ -6,13 +6,13 @@ export default function Matrix({ data }) {
       <thead>
         <tr>
           <th>-</th>
-          {Object.keys(data).map((col, i) => (
+          {Object.keys(data || {}).map((col, i) => (
             <th key={`${data}-${i}`}>{col}</th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {Object.keys(data).map((col, i) => (
+        {Object.keys(data || {}).map((col, i) => (
           <tr key={`${data}-${i}`}>
             <th>{col}</th>
             {Object.keys(data[col]).map((row, i) => (

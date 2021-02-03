@@ -65,6 +65,7 @@ export default function Home() {
 
   return (
     <div>
+      <a href="https://vargas.dev">vargas.dev</a>
       <h1>Markowitz calculator</h1>
       <h4>
         {' '}

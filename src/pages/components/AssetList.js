@@ -24,16 +24,16 @@ export default function AssetList({ assets, onAdd, onRemove }) {
         onClick={() => {
           const today = new Date()
           fetch(
-            `https://api.oplab.com.br/v3/market/charts/data/${symbol.toUpperCase()}/1D?from=${format(
+            `https://lorraine.oplab.com.br/v3/market/charts/data/${symbol.toUpperCase()}/1D?from=${format(
               subBusinessDays(today, 252),
               'yyyyMMdd0000'
-            )}&to=${format(today, 'yyyyMMdd0000')}&fill=business_days`,
-            {
-              headers: {
-                'access-token':
-                  'GNM/d6VQN92VIdXAWrum7YiXk4MtAHMji9UhCyBs7jO1DBSYL1Q/1VaQsfhYOqJw2Q3gVdiaep20Ec9tHnfbhQ==--yFb4BBYcWtYgrHnDHkGaJA==--7xaMOyZJb43SSW9kDWzNKw==',
-              },
-            }
+            )}&to=${format(today, 'yyyyMMdd0000')}&fill=business_days`
+            // {
+            //   headers: {
+            //     'access-token':
+            //       'GNM/d6VQN92VIdXAWrum7YiXk4MtAHMji9UhCyBs7jO1DBSYL1Q/1VaQsfhYOqJw2Q3gVdiaep20Ec9tHnfbhQ==--yFb4BBYcWtYgrHnDHkGaJA==--7xaMOyZJb43SSW9kDWzNKw==',
+            //   },
+            // }
           )
             .then(res => res.json())
             .then(({ data }) => {
@@ -74,7 +74,7 @@ export default function AssetList({ assets, onAdd, onRemove }) {
           </tr>
         </thead>
         <tbody>
-          {assets.map(asset => (
+          {assets?.map(asset => (
             <tr key={asset.symbol}>
               <td>{asset.symbol}</td>
               <td>{asset.amount}</td>
