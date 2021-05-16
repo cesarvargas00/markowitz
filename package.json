@@ -15,10 +15,15 @@
     "deploy": "gatsby build --prefix-paths && gh-pages -d public"
   },
   "dependencies": {
+    "chart.js": "^3.2.1",
     "date-fns": "^2.16.1",
     "gatsby": "^2.24.61",
+    "portfolio-allocation": "^0.0.11",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-chartjs-2": "^3.0.3",
+    "react-dom": "^16.12.0",
+    "react-google-charts": "^3.0.15",
+    "uplot": "^1.6.9"
   },
   "devDependencies": {
     "gh-pages": "^3.1.0",

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AssetList from './components/AssetList'
 import Matrix from './components/Matrix'
 import Result from './components/Result'
-
+import PortfolioAllocation from 'portfolio-allocation'
+import Chart from 'react-google-charts'
 function correlation(x, y) {
   const xMean = x.reduce((acc, el) => el + acc, 0) / x.length
   const yMean = y.reduce((acc, el) => el + acc, 0) / y.length
@@ -41,6 +42,9 @@ export default function Home() {
   const [assets, setAssets] = useState([])
   const [correlations, setCorrelations] = useState({})
   const [covariances, setCovariances] = useState({})
+  const [data, setData] = useState([])
+  const [weights, setWeights] = useState([])
+  const [currentWeight, setCurrentWeight] = useState([])
 
   useEffect(() => {
     const newCorrelations = {}
@@ -60,7 +64,31 @@ export default function Home() {
       (acc, asset) => ({ ...acc, [asset.symbol]: asset.stdev }),
       {}
     )
-    setCovariances(covariancesFromCorrelations(newCorrelations, stdevs))
+    const newCovariances = covariancesFromCorrelations(newCorrelations, stdevs)
+    setCovariances(newCovariances)
+    if (assets.length > 0) {
+      const arCovars = Object.keys(newCovariances).map(k =>
+        Object.keys(newCovariances[k]).map(k2 => newCovariances[k][k2])
+      )
+      const meanReturns = assets.map(
+        a =>
+          (1 + a.returns.reduce((acc, r) => acc + r, 0) / a.returns.length) **
+            30 -
+          1
+      )
+      const portfolio = PortfolioAllocation.meanVarianceEfficientFrontierPortfolios(
+        meanReturns,
+        arCovars
+      )
+      const coords = []
+      const weights = []
+      portfolio.forEach(p => {
+        weights.push(p[0])
+        coords.push([p[2], p[1]])
+      })
+      setData(coords)
+      setWeights(weights)
+    }
   }, [assets.length, assets])
 
   return (
@@ -95,6 +123,50 @@ export default function Home() {
       <h2>Covariations</h2>
       <Matrix data={covariances} />
       <Result assets={assets} covariances={covariances} />
+      <h2>Efficient frontier</h2>
+      {assets.length > 1 ? (
+        <div>
+          <ul>
+            {assets.map(({ symbol }, i) => (
+              <li>
+                {symbol} - {currentWeight[i]}
+              </li>
+            ))}
+          </ul>
+          <Chart
+            width={'100%'}
+            height={'800px'}
+            chartType="AreaChart"
+            loader={<div>Loading...</div>}
+            chartEvents={[
+              {
+                eventName: 'select',
+                callback: ({ chartWrapper }) => {
+                  const chart = chartWrapper.getChart()
+                  const selection = chart.getSelection()
+                  if (selection.length === 1) {
+                    const [selectedItem] = selection
+                    const { row } = selectedItem
+                    setCurrentWeight(weights[row])
+                  }
+                },
+              },
+            ]}
+            data={[
+              ['Risk', 'Return'],
+              ...data.map(coord => [coord[0] * 100, coord[1] * 100]),
+            ]}
+            options={{
+              hAxis: {
+                title: 'Risk (%)',
+              },
+              vAxis: {
+                title: 'Return (%)',
+              },
+            }}
+          />
+        </div>
+      ) : null}
     </div>
   )
 }
